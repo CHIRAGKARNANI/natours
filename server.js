@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 process.on('uncaughtException', err => {
-  console.log('UNHANDLER EXCEPTION!   SHUTTING DOWN........')
+  console.log('UNHANDLER EXCEPTION!   SHUTTING DOWN........');
   console.log(err.name, err.message);
   process.exit(1);
 });
 
-dotenv.config({ path: './config.env'});
+dotenv.config({ path: './config.env' });
 const app = require('./app');
 
 const DB = process.env.DATABASE.replace(
@@ -21,7 +21,7 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
   })
   .then(() => console.log('DB connection Successful'));
 
@@ -38,3 +38,9 @@ process.on('unhandledRejection', err => {
   });
 });
 
+process.on('SIGTERM', () => {
+  console.log('SIGTERM RECIEVED.   SHUTTING DOWN Gracefully');
+  server.close(() => {
+    console.log('PROCESS TERMINATED');
+  });
+});
